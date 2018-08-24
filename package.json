@@ -4,7 +4,12 @@
   "description": "react capstone",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "start": "node server.js",
+    "test": "mocha --exit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/reinhal/contactualize-api.git"
   },
   "author": "Lisa Reinhardt",
   "license": "ISC",
