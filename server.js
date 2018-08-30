@@ -6,6 +6,12 @@ const cors = require('cors');
 const { CLIENT_ORIGIN } = require('./config');
 const PORT = process.env.PORT || 8080;
 
+const contactSchema = require('./models/contact_model');
+const interactionSchema = require('./models/interactionSchema');
+
+const seedContacts = require('./db/contact.json');
+const seedInteractions = require('./db/interactions.json');
+
 app.use(
   cors({
     origin: CLIENT_ORIGIN
