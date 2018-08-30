@@ -3,12 +3,8 @@
 const express = require('express');
 const app = express();
 const cors = require('cors');
-const {CLIENT_ORIGIN} = require('./config');
+const { CLIENT_ORIGIN } = require('./config');
 const PORT = process.env.PORT || 8080;
-
-app.get('/api/*', (req, res) => {
-  res.json({ok: true});
-});
 
 app.use(
   cors({
@@ -16,6 +12,33 @@ app.use(
   })
 );
 
+app.get('/api/auth', (req, res) => {
+  res.json({ ok: true });
+});
+
+app.get('/api/interactions', (req, res) => {
+  res.json({
+    interactions: [
+      {
+        title: 'Coffee Date',
+        text: 'Discussed plans for a trip'
+      },
+      {
+        title: 'Phone Call',
+        text: 'Went through ideas for the new website.'
+      },
+      {
+        title: 'Email',
+        text: "Followed up on last week's meeing."
+      },
+      {
+        title: 'Dinner Meeting',
+        text: 'Asked about the surgery from the day before.'
+      }
+    ]
+  });
+});
+
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
-module.exports = {app};
+module.exports = { app };
