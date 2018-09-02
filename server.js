@@ -27,6 +27,13 @@ app.get('/api/interactions', (req, res) => {
     });
 });
 
+app.get('/api/contacts', (req, res) => {
+  return Contact.find()
+    .then(function(contacts){
+      res.json(contacts);
+    });
+});
+
 mongoose.connect(MONGODB_URI)
   .then(instance => {
     const conn = instance.connections[0];
