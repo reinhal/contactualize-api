@@ -2,22 +2,22 @@
   {
     "_id": "000000000000000000000001",
     "interactions": ["111111111111111111111111"],
-    "name": "Anne",
+    "person": "Anne",
     "notes": "Meet regarding material making for classroom"
   },  {
     "_id": "000000000000000000000002",
     "interactions": ["111111111111111111111112"],
-    "name": "Michael",
+    "person": "Michael",
     "notes": "Plan a camping trip outside the Twin Cities."
   },  {
     "_id": "000000000000000000000003",
     "interactions": ["111111111111111111111113"],
-    "name": "Frederik",
+    "person": "Frederik",
     "notes": "Is looking for a new job and connections."
   },  {
     "_id": "000000000000000000000004",
     "interactions": ["111111111111111111111114"],
-    "name": "Louise",
+    "person": "Louise",
     "notes": "Would like to get together to make kimchi."
   }
 ]
