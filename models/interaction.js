@@ -3,10 +3,10 @@
 const mongoose = require('mongoose');
 
 const interactionSchema = new mongoose.Schema({
-  person_id: {
+  person: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Contact',
-    required: true
+    ref: 'Contact'
+    // required: true
   }, 
   title: {
     type: String
@@ -22,6 +22,10 @@ interactionSchema.set('toObject', {
     delete ret._id;  // don't need this id
     delete ret.__v; 
   }
+});
+
+interactionSchema.pre('find', function(){
+  this.populate('person');
 });
 
 module.exports = mongoose.model('Interaction', interactionSchema);

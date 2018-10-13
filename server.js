@@ -29,16 +29,23 @@ app.get('/api/interactions', (req, res) => {
     });
 });
 
-app.post('/api/interactions', jsonParser, (req, res, next) => {
-  const { person_id, title, text } = req.body;
+app.get('/api/interactions/:id', (req, res) => {
+  return Interaction.findById(req.params.id)
+    .then(function(interaction){
+      res.json(interaction);
+    });
+});
 
+app.post('/api/interactions', jsonParser, (req, res, next) => {
+  console.log(req.body);
+  const { person_id, title, text } = req.body;
   if (!person_id, !title, !text) {
     const err = new Error(`Missing something`);
     err.status = 400;
     return next(err);
   }
-
-  Interaction.create({ person_id, title, text })
+  ///get the json and update contact
+  Interaction.create({ person_id, title, text})
     .then(newInteraction => {
       res.status(201)
         .json(newInteraction);
@@ -89,6 +96,13 @@ app.get('/api/contacts', (req, res) => {
   return Contact.find()
     .then(function(contacts){
       res.json(contacts);
+    });
+});
+
+app.get('/api/contacts/:id', (req, res) => {
+  return Contact.findById(req.params.id)
+    .then(function(contact){
+      res.json(contact);
     });
 });
 
