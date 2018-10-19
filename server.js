@@ -23,21 +23,21 @@ app.get('/api/auth', (req, res) => {
 });
 
 app.get('/api/interactions', (req, res) => {
-  return Interaction.find()
+  Interaction.find()
     .then(function(interactions){
       res.json(interactions);
     });
 });
 
 app.get('/api/interactions/:id', (req, res) => {
-  return Interaction.findById(req.params.id)
+  Interaction.findById(req.params.id)
     .then(function(interaction){
       res.json(interaction);
     });
 });
 
 app.post('/api/interactions', jsonParser, (req, res, next) => {
-  console.log(req.body);
+  console.log('req.body', req.body);
   const { person_id, title, text } = req.body;
   if (!person_id, !title, !text) {
     const err = new Error(`Missing something`);
@@ -47,8 +47,14 @@ app.post('/api/interactions', jsonParser, (req, res, next) => {
   ///get the json and update contact
   Interaction.create({ person_id, title, text})
     .then(newInteraction => {
-      res.status(201)
-        .json(newInteraction);
+      Contact.findOne({_id:person_id},function(err,contact){
+        if(!err){
+          contact.interactions.push(newInteraction._id);
+          contact.save();
+          res.status(201).json(newInteraction);
+        }
+      });
+      
     })
     .catch(next);
 });
@@ -93,14 +99,14 @@ app.delete('/api/interactions/:id', (req, res, next) => {
 });
 
 app.get('/api/contacts', (req, res) => {
-  return Contact.find()
+  Contact.find()
     .then(function(contacts){
       res.json(contacts);
     });
 });
 
 app.get('/api/contacts/:id', (req, res) => {
-  return Contact.findById(req.params.id)
+  Contact.findById(req.params.id)
     .then(function(contact){
       res.json(contact);
     });
