@@ -38,14 +38,14 @@ app.get('/api/interactions/:id', (req, res) => {
 
 app.post('/api/interactions', jsonParser, (req, res, next) => {
   console.log('req.body', req.body);
-  const { person_id, title, text } = req.body;
-  if (!person_id, !title, !text) {
+  const { person_id, person, title, text } = req.body;
+  if (!person_id, !person, !title, !text) {
     const err = new Error(`Missing something`);
     err.status = 400;
     return next(err);
   }
   ///get the json and update contact
-  Interaction.create({ person_id, title, text})
+  Interaction.create({ person_id, person, title, text})
     .then(newInteraction => {
       Contact.findOne({_id:person_id},function(err,contact){
         if(!err){
@@ -54,7 +54,6 @@ app.post('/api/interactions', jsonParser, (req, res, next) => {
           res.status(201).json(newInteraction);
         }
       });
-      
     })
     .catch(next);
 });
@@ -62,14 +61,14 @@ app.post('/api/interactions', jsonParser, (req, res, next) => {
 app.put('/api/interactions/:id', jsonParser, (req, res, next) => {
   const id = req.params.id;
   const updatedInteraction = {};
-  const updatedFields = [ 'person_id', 'title', 'text'];
+  const updatedFields = [ 'person_id', 'person', 'title', 'text'];
   console.log('request = ' + req.body);
   updatedFields.forEach( field => {
     if (field in req.body) {
       updatedInteraction[field] = req.body[field];
     }
   });
-  if (!updatedInteraction.person_id, !updatedFields.title, !updatedInteraction.text) {
+  if (!updatedInteraction.person_id, !updatedInteraction.person, !updatedFields.title, !updatedInteraction.text) {
     const err = new Error ('Missing some information');
     err.status = 400;
     return next(err);

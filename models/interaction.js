@@ -8,6 +8,9 @@ const interactionSchema = new mongoose.Schema({
     ref: 'Contact'
     // required: true
   }, 
+  person: {
+    type: String
+  },
   title: {
     type: String
   }, 
@@ -23,9 +26,5 @@ interactionSchema.set('toObject', {
     delete ret.__v; 
   }
 });
-
-// interactionSchema.pre('find', function(){
-//   this.populate('person_id');
-// });
 
 module.exports = mongoose.model('Interaction', interactionSchema);

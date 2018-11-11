@@ -1,21 +1,25 @@
 [
   {
     "person_id": "000000000000000000000001",
+    "person": "Anne",
     "_id": "111111111111111111111111",
     "title": "Coffee Date",
     "text": "Discussed plans for a trip"
   },  {
     "person_id": "000000000000000000000002",
+    "person": "Michael",
     "_id": "111111111111111111111112",
     "title": "Phone Call",
     "text": "Went through ideas for the new website."
   },  {
     "person_id": "000000000000000000000003",
+    "person": "Frederik",
     "_id": "111111111111111111111113",
     "title": "Email",
     "text": "Followed up on last week's meeing."
   }, {
     "person_id": "000000000000000000000004",
+    "person": "Louise",
     "_id": "111111111111111111111114",
     "title": "Dinner Meeting",
     "text": "Asked about the surgery from the day before."
