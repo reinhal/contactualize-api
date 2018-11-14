@@ -8,9 +8,6 @@ const interactionSchema = new mongoose.Schema({
     ref: 'Contact'
     // required: true
   }, 
-  person: {
-    type: String
-  },
   title: {
     type: String
   }, 

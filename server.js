@@ -24,6 +24,7 @@ app.get('/api/auth', (req, res) => {
 
 app.get('/api/interactions', (req, res) => {
   Interaction.find()
+    .populate('person_id')
     .then(function(interactions){
       res.json(interactions);
     });

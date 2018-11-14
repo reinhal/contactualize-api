@@ -23,9 +23,7 @@ contactSchema.set('toObject', {
     delete ret.__v;
   }
 });
-// interactions.length for preview
-// changing number out for the detailed interactions
-// population
+
 contactSchema.pre('find', function(){
   this.populate('interactions');
 });
