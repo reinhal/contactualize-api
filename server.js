@@ -39,6 +39,7 @@ app.get('/api/interactions/:id', (req, res) => {
 
 app.post('/api/interactions', jsonParser, (req, res, next) => {
   const { person_id, title, text } = req.body;
+  console.log(req.body, 'request body');
   if (!person_id, !title, !text) {
     const err = new Error(`Missing something`);
     err.status = 400;
@@ -88,6 +89,13 @@ app.delete('/api/interactions/:id', (req, res, next) => {
   const id = req.params.id;
   Interaction.findByIdAndRemove(id)
     .then(count => {
+      // Contact.findOne({person_id:id},function(err,contact){
+      //   if(!err){
+      //     contact.interactions.pull(id);
+      //     contact.save();
+      //     res.status(204).end();
+      //   }
+      // });
       if (count) {
         res.status(204).end();
       } else {

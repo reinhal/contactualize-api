@@ -28,3 +28,7 @@ contactSchema.pre('find', function(){
   this.populate('interactions');
 });
 module.exports = mongoose.model('Contact', contactSchema);
+
+//object has a key of interactions which points to the array of interaction 
+// IDs belonging to that person, find the ID of the interaction that was just 
+// deleted and remove it from that array of interactions
