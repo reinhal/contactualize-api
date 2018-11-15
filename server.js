@@ -38,15 +38,13 @@ app.get('/api/interactions/:id', (req, res) => {
 });
 
 app.post('/api/interactions', jsonParser, (req, res, next) => {
-  console.log('req.body', req.body);
-  const { person_id, person, title, text } = req.body;
-  if (!person_id, !person, !title, !text) {
+  const { person_id, title, text } = req.body;
+  if (!person_id, !title, !text) {
     const err = new Error(`Missing something`);
     err.status = 400;
     return next(err);
   }
-  ///get the json and update contact
-  Interaction.create({ person_id, person, title, text})
+  Interaction.create({ person_id, title, text})
     .then(newInteraction => {
       Contact.findOne({_id:person_id},function(err,contact){
         if(!err){
@@ -62,25 +60,26 @@ app.post('/api/interactions', jsonParser, (req, res, next) => {
 app.put('/api/interactions/:id', jsonParser, (req, res, next) => {
   const id = req.params.id;
   const updatedInteraction = {};
-  const updatedFields = [ 'person_id', 'person', 'title', 'text'];
-  console.log('request = ' + req.body);
+  const updatedFields = [ 'person_id', 'title', 'text'];
   updatedFields.forEach( field => {
     if (field in req.body) {
       updatedInteraction[field] = req.body[field];
     }
   });
-  if (!updatedInteraction.person_id, !updatedInteraction.person, !updatedFields.title, !updatedInteraction.text) {
+  if (!updatedInteraction.person_id, !updatedFields.title, !updatedInteraction.text) {
     const err = new Error ('Missing some information');
     err.status = 400;
     return next(err);
   }
-  Interaction.findByIdAndUpdate(id, updatedInteraction, {new: true})
+  Interaction.findByIdAndUpdate(id, updatedInteraction.person_id, updatedInteraction)
     .then(interaction => {
-      if (interaction) {
-        res.json(interaction);
-      } else {
-        next();
-      }
+      Contact.findOne({_id:updatedInteraction.person_id},function(err,contact){
+        if(!err){
+          contact.interactions.push(interaction._id);
+          contact.save();
+          res.status(201).json(interaction);
+        }
+      });
     })
     .catch(next);
 });
