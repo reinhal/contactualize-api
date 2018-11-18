@@ -3,8 +3,10 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const passport = require('passport');
 const { CLIENT_ORIGIN, MONGODB_URI } = require('./config');
 const PORT = process.env.PORT || 8080;
 
@@ -12,12 +14,33 @@ const Contact = require('./models/contact');
 const Interaction = require('./models/interaction');
 const jsonParser = bodyParser.json();
 
+const { router: usersRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+
+mongoose.Promise = global.Promise;
+
+app.use(morgan('common'));
+
 app.use(
   cors({
     origin: CLIENT_ORIGIN
   })
 );
- 
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+app.get('/api/protected', jwtAuth, (req, res) => {
+  return res.json({
+    data: 'rosebud'
+  });
+});
+
 app.get('/api/auth', (req, res) => {
   res.json({ ok: true });
 });
@@ -167,21 +190,64 @@ app.delete('/api/contacts/:id', (req, res, next) => {
     .catch(next);
 });
 
-mongoose.connect(MONGODB_URI)
-  .then(instance => {
-    const conn = instance.connections[0];
-    console.info(`Connected to: mongodb://${conn.host}:${conn.port}/${conn.name}`);
-  })
-  .catch(err => {
-    console.error(`ERROR: ${err.message}`);
-    console.error('\n === Did you remember to start `mongod`? === \n');
-    console.error(err);
-  });
+// mongoose.connect(MONGODB_URI)
+//   .then(instance => {
+//     const conn = instance.connections[0];
+//     console.info(`Connected to: mongodb://${conn.host}:${conn.port}/${conn.name}`);
+//   })
+//   .catch(err => {
+//     console.error(`ERROR: ${err.message}`);
+//     console.error('\n === Did you remember to start `mongod`? === \n');
+//     console.error(err);
+//   });
     
-app.listen(PORT, function () {
-  console.info(`Server listening on ${this.address().port}`);
-}).on('error', err => {
-  console.error(err);
+// app.listen(PORT, function () {
+//   console.info(`Server listening on ${this.address().port}`);
+// }).on('error', err => {
+//   console.error(err);
+// });
+
+app.use('*', (req, res) => {
+  return res.status(404).json({ message: 'Not Found' });
 });
 
-module.exports = { app };
+let server;
+
+function runServer(databaseUrl, port = PORT) {
+
+  return new Promise((resolve, reject) => {
+    mongoose.connect(databaseUrl, err => {
+      if (err) {
+        return reject(err);
+      }
+      server = app.listen(port, () => {
+        console.log(`Your app is listening on port ${port}`);
+        resolve();
+      })
+        .on('error', err => {
+          mongoose.disconnect();
+          reject(err);
+        });
+    });
+  });
+}
+
+function closeServer() {
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log('Closing server');
+      server.close(err => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  });
+}
+
+if (require.main === module) {
+  runServer(MONGODB_URI).catch(err => console.error(err));
+}
+
+module.exports = { app, runServer, closeServer };
