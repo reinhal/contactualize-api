@@ -27,6 +27,13 @@ app.use(
   })
 );
 
+app.use(function (req, res, next) {
+  if (req.method === 'OPTIONS') {
+    return res.send(204);
+  }
+  next();
+});
+
 passport.use(localStrategy);
 passport.use(jwtStrategy);
 
@@ -45,7 +52,7 @@ app.get('/api/auth', (req, res) => {
   res.json({ ok: true });
 });
 
-app.get('/api/interactions', (req, res) => {
+app.get('/api/interactions', jwtAuth, (req, res) => {
   Interaction.find()
     .populate('person_id')
     .then(function(interactions){
@@ -53,14 +60,14 @@ app.get('/api/interactions', (req, res) => {
     });
 });
 
-app.get('/api/interactions/:id', (req, res) => {
+app.get('/api/interactions/:id', jwtAuth, (req, res) => {
   Interaction.findById(req.params.id)
     .then(function(interaction){
       res.json(interaction);
     });
 });
 
-app.post('/api/interactions', jsonParser, (req, res, next) => {
+app.post('/api/interactions', [jsonParser, jwtAuth],(req, res, next) => {
   const { person_id, title, text } = req.body;
   console.log(req.body, 'request body');
   if (!person_id, !title, !text) {
@@ -81,7 +88,7 @@ app.post('/api/interactions', jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-app.put('/api/interactions/:id', jsonParser, (req, res, next) => {
+app.put('/api/interactions/:id', [jsonParser, jwtAuth],(req, res, next) => {
   const id = req.params.id;
   const updatedInteraction = {};
   const updatedFields = [ 'person_id', 'title', 'text'];
@@ -108,7 +115,7 @@ app.put('/api/interactions/:id', jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-app.delete('/api/interactions/:id', (req, res, next) => {
+app.delete('/api/interactions/:id', jwtAuth, (req, res, next) => {
   const id = req.params.id;
   Interaction.findByIdAndRemove(id)
     .then(count => {
@@ -121,21 +128,21 @@ app.delete('/api/interactions/:id', (req, res, next) => {
     .catch(next);
 });
 
-app.get('/api/contacts', (req, res) => {
+app.get('/api/contacts', jwtAuth, (req, res) => {
   Contact.find()
     .then(function(contacts){
       res.json(contacts);
     });
 });
 
-app.get('/api/contacts/:id', (req, res) => {
+app.get('/api/contacts/:id', jwtAuth, (req, res) => {
   Contact.findById(req.params.id)
     .then(function(contact){
       res.json(contact);
     });
 });
 
-app.post('/api/contacts', jsonParser, (req, res, next) => {
+app.post('/api/contacts', [jsonParser, jwtAuth], (req, res, next) => {
   const { interactions, person, notes } = req.body;
 
   if (!interactions, !person, !notes) {
@@ -152,7 +159,7 @@ app.post('/api/contacts', jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-app.put('/api/contacts/:id', jsonParser, (req, res, next) => {
+app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
   const id = req.params.id;
   const updatedContact = {};
   const updatedFields = [ 'interactions', 'person', 'notes'];
@@ -177,7 +184,7 @@ app.put('/api/contacts/:id', jsonParser, (req, res, next) => {
     .catch(next);
 });
 
-app.delete('/api/contacts/:id', (req, res, next) => {
+app.delete('/api/contacts/:id', jwtAuth, (req, res, next) => {
   const id = req.params.id;
   Contact.findByIdAndRemove(id)
     .then(count => {
