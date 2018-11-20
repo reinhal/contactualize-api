@@ -20,6 +20,7 @@ const UserSchema = mongoose.Schema({
 
 UserSchema.methods.serialize = function() {
   return {
+    id: this._id || '',
     username: this.username || '',
     firstName: this.firstName || '',
     lastName: this.lastName || ''
@@ -34,6 +35,4 @@ UserSchema.statics.hashPassword = function(password) {
   return bcrypt.hash(password, 10);
 };
 
-const User = mongoose.model('User', UserSchema);
-
-module.exports = {User};
+module.exports = mongoose.model('User', UserSchema);

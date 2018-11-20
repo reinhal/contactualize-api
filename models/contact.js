@@ -3,10 +3,14 @@
 const mongoose = require('mongoose');
 
 const contactSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   interactions: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Interaction'
-    // required: true
   }],
   person: {
     type: String
@@ -27,6 +31,7 @@ contactSchema.set('toObject', {
 contactSchema.pre('find', function(){
   this.populate('interactions');
 });
+
 module.exports = mongoose.model('Contact', contactSchema);
 
 //object has a key of interactions which points to the array of interaction 

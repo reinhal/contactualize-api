@@ -53,7 +53,7 @@ app.get('/api/auth', (req, res) => {
 });
 
 app.get('/api/interactions', jwtAuth, (req, res) => {
-  Interaction.find()
+  Interaction.find({userId:req.user.id})
     .populate('person_id')
     .then(function(interactions){
       res.json(interactions);
@@ -129,7 +129,8 @@ app.delete('/api/interactions/:id', jwtAuth, (req, res, next) => {
 });
 
 app.get('/api/contacts', jwtAuth, (req, res) => {
-  Contact.find()
+  console.log(req.user.id);
+  Contact.find({userId:req.user.id})
     .then(function(contacts){
       res.json(contacts);
     });
