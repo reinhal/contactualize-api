@@ -68,14 +68,14 @@ app.get('/api/interactions/:id', jwtAuth, (req, res) => {
 });
 
 app.post('/api/interactions', [jsonParser, jwtAuth],(req, res, next) => {
+  const userId = req.user.id;
   const { person_id, title, text } = req.body;
-  console.log(req.body, 'request body');
   if (!person_id, !title, !text) {
     const err = new Error(`Missing something`);
     err.status = 400;
     return next(err);
   }
-  Interaction.create({ person_id, title, text})
+  Interaction.create({ userId, person_id, title, text})
     .then(newInteraction => {
       Contact.findOne({_id:person_id},function(err,contact){
         if(!err){
@@ -90,6 +90,7 @@ app.post('/api/interactions', [jsonParser, jwtAuth],(req, res, next) => {
 
 app.put('/api/interactions/:id', [jsonParser, jwtAuth],(req, res, next) => {
   const id = req.params.id;
+  const userId = req.user.id;
   const updatedInteraction = {};
   const updatedFields = [ 'person_id', 'title', 'text'];
   updatedFields.forEach( field => {
@@ -102,7 +103,7 @@ app.put('/api/interactions/:id', [jsonParser, jwtAuth],(req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  Interaction.findByIdAndUpdate(id, updatedInteraction.person_id, updatedInteraction)
+  Interaction.findByIdAndUpdate(userId, id, updatedInteraction.person_id, updatedInteraction)
     .then(interaction => {
       Contact.findOne({_id:updatedInteraction.person_id},function(err,contact){
         if(!err){
@@ -129,7 +130,6 @@ app.delete('/api/interactions/:id', jwtAuth, (req, res, next) => {
 });
 
 app.get('/api/contacts', jwtAuth, (req, res) => {
-  console.log(req.user.id);
   Contact.find({userId:req.user.id})
     .then(function(contacts){
       res.json(contacts);
@@ -144,15 +144,16 @@ app.get('/api/contacts/:id', jwtAuth, (req, res) => {
 });
 
 app.post('/api/contacts', [jsonParser, jwtAuth], (req, res, next) => {
-  const { interactions, person, notes } = req.body;
-
-  if (!interactions, !person, !notes) {
+  const userId = req.user.id;
+  const { person, notes } = req.body;
+  if (!userId || !person || !notes) {
     const err = new Error(`Missing something`);
+    //make this error message more specific
     err.status = 400;
     return next(err);
   }
 
-  Contact.create({ interactions, person, notes })
+  Contact.create({ userId, person, notes })
     .then(newContact => {
       res.status(201)
         .json(newContact);
@@ -162,8 +163,9 @@ app.post('/api/contacts', [jsonParser, jwtAuth], (req, res, next) => {
 
 app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
   const id = req.params.id;
+  const userId = req.user.id;
   const updatedContact = {};
-  const updatedFields = [ 'interactions', 'person', 'notes'];
+  const updatedFields = [ 'person', 'notes'];
   updatedFields.forEach( field => {
     if (field in req.body) {
       updatedContact[field] = req.body[field];
@@ -174,7 +176,7 @@ app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  Contact.findByIdAndUpdate(id, updatedContact, {new: true})
+  Contact.findByIdAndUpdate(id, updatedContact, userId, {new: true})
     .then(contact => {
       if (contact) {
         res.json(contact);
