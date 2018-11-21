@@ -137,6 +137,7 @@ app.get('/api/contacts', jwtAuth, (req, res) => {
 });
 
 app.get('/api/contacts/:id', jwtAuth, (req, res) => {
+  console.log('RES',res.body);
   Contact.findById(req.params.id)
     .then(function(contact){
       res.json(contact);
@@ -199,23 +200,6 @@ app.delete('/api/contacts/:id', jwtAuth, (req, res, next) => {
     })
     .catch(next);
 });
-
-// mongoose.connect(MONGODB_URI)
-//   .then(instance => {
-//     const conn = instance.connections[0];
-//     console.info(`Connected to: mongodb://${conn.host}:${conn.port}/${conn.name}`);
-//   })
-//   .catch(err => {
-//     console.error(`ERROR: ${err.message}`);
-//     console.error('\n === Did you remember to start `mongod`? === \n');
-//     console.error(err);
-//   });
-    
-// app.listen(PORT, function () {
-//   console.info(`Server listening on ${this.address().port}`);
-// }).on('error', err => {
-//   console.error(err);
-// });
 
 app.use('*', (req, res) => {
   return res.status(404).json({ message: 'Not Found' });
