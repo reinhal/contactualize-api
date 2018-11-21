@@ -98,12 +98,13 @@ app.put('/api/interactions/:id', [jsonParser, jwtAuth],(req, res, next) => {
       updatedInteraction[field] = req.body[field];
     }
   });
+  updatedInteraction.userId = userId;
   if (!updatedInteraction.person_id, !updatedFields.title, !updatedInteraction.text) {
     const err = new Error ('Missing some information');
     err.status = 400;
     return next(err);
   }
-  Interaction.findByIdAndUpdate(userId, id, updatedInteraction.person_id, updatedInteraction)
+  Interaction.findByIdAndUpdate(id, updatedInteraction)
     .then(interaction => {
       Contact.findOne({_id:updatedInteraction.person_id},function(err,contact){
         if(!err){
