@@ -180,11 +180,18 @@ app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
   }
   Contact.findByIdAndUpdate(id, updatedContact, userId, {new: true})
     .then(contact => {
-      if (contact) {
-        res.json(contact);
-      } else {
-        next();
-      }
+      Contact.findOne({id}, function(err,contact){
+        if(!err){
+          contact.push(id);
+          contact.save();
+          res.status(201).json(interaction);
+        }
+      })
+      // if (contact) {
+      //   res.json(contact);
+      // } else {
+      //   next();
+      // }
     })
     .catch(next);
 });
