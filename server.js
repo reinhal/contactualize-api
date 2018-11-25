@@ -104,7 +104,7 @@ app.put('/api/interactions/:id', [jsonParser, jwtAuth],(req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  Interaction.findByIdAndUpdate(id, updatedInteraction)
+  Interaction.findByIdAndUpdate(id, updatedInteraction.person_id, updatedInteraction)
     .then(interaction => {
       Contact.findOne({_id:updatedInteraction.person_id},function(err,contact){
         if(!err){
@@ -154,7 +154,6 @@ app.post('/api/contacts', [jsonParser, jwtAuth], (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-
   Contact.create({ userId, person, notes })
     .then(newContact => {
       res.status(201)
@@ -172,7 +171,7 @@ app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
     if (field in req.body) {
       updatedContact[field] = req.body[field];
     }
-  });
+  })
   if (!updatedContact.interactions, !updatedFields.person, !updatedContact.notes) {
     const err = new Error ('Missing some information');
     err.status = 400;
@@ -180,13 +179,13 @@ app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
   }
   Contact.findByIdAndUpdate(id, updatedContact, userId, {new: true})
     .then(contact => {
-      Contact.findOne({id}, function(err,contact){
+      contact.findOne({_id:updatedContact.id}, function(err,contact){
         if(!err){
-          contact.push(id);
+          contact.push(contact._id);
           contact.save();
-          res.status(201).json(interaction);
+          res.status(201).json(contact);
         }
-      })
+      });
       // if (contact) {
       //   res.json(contact);
       // } else {
