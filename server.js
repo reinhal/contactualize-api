@@ -176,7 +176,7 @@ app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  Contact.findByIdAndUpdate(id, updatedContact, userId, {new: true})
+  Contact.findByIdAndUpdate(id, updatedContact, {new: true})
     .then(contact => {
       if (contact) {
         res.json(contact);
