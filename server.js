@@ -104,15 +104,13 @@ app.put('/api/interactions/:id', [jsonParser, jwtAuth],(req, res, next) => {
     err.status = 400;
     return next(err);
   }
-  Interaction.findByIdAndUpdate(id, updatedInteraction.person_id, updatedInteraction)
+  Interaction.findByIdAndUpdate(id, updatedInteraction, {new: true})
     .then(interaction => {
-      Contact.findOne({_id:updatedInteraction.person_id},function(err,contact){
-        if(!err){
-          contact.interactions.push(interaction._id);
-          contact.save();
-          res.status(201).json(interaction);
-        }
-      });
+      if(interaction) {
+        res.json(interaction);
+      } else {
+        next();
+      }
     })
     .catch(next);
 });
@@ -171,26 +169,20 @@ app.put('/api/contacts/:id', [jsonParser, jwtAuth], (req, res, next) => {
     if (field in req.body) {
       updatedContact[field] = req.body[field];
     }
-  })
-  if (!updatedContact.interactions, !updatedFields.person, !updatedContact.notes) {
+  });
+  updatedContact.userId = userId;
+  if (!updatedFields.person, !updatedContact.notes) {
     const err = new Error ('Missing some information');
     err.status = 400;
     return next(err);
   }
   Contact.findByIdAndUpdate(id, updatedContact, userId, {new: true})
     .then(contact => {
-      contact.findOne({_id:updatedContact.id}, function(err,contact){
-        if(!err){
-          contact.push(contact._id);
-          contact.save();
-          res.status(201).json(contact);
-        }
-      });
-      // if (contact) {
-      //   res.json(contact);
-      // } else {
-      //   next();
-      // }
+      if (contact) {
+        res.json(contact);
+      } else {
+        next();
+      }
     })
     .catch(next);
 });
