@@ -5,7 +5,7 @@ const app = express();
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+// const cors = require('cors');
 const passport = require('passport');
 const { CLIENT_ORIGIN, MONGODB_URI } = require('./config');
 const PORT = process.env.PORT || 8080;
@@ -21,11 +21,11 @@ mongoose.Promise = global.Promise;
 
 app.use(morgan('common'));
 
-app.use(
-  cors({
-    origin: CLIENT_ORIGIN
-  })
-);
+// app.use(
+//   cors({
+//     origin: CLIENT_ORIGIN
+//   })
+// );
 
 app.use(function (req, res, next) {
   if (req.method === 'OPTIONS') {
