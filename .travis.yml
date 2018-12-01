@@ -1,11 +1,11 @@
-language: node_js
-node_js: node
-services:
-- mongodb
-deploy:
-  provider: heroku
-  api_key:
-    secure: AyEyTr93+zEbHrCtFQZYYZd9cuouLRRRDw9iSTCckXWlaqFFxKuQh9lHsJ9NXNs7XoBUldTpIxCOapWplkWsWlAesB9kwxRgNGImwBcUNLWhEKsTCCtavxqt19Df58Iaxed3tDTzLUT/kEEA5sHlIai5PlERa4ZKrgIOs4+slhmJeKhsva0GVREw9GBkwOXyBDVqIQackJslKDAi3N0vdoOfelon+4sP4xQAe6aMD/9Wkt/OuL1me45013EFGY59E9zDvn5rzoeTHA3Crxa5rhNCf+Sy0BW7xQ64Ggekjikuzz5cG8yWzb5zTYsVbk9h/72EBgjJW6nvcFXnc8ihEREb1PHxWakAPUrKZpnjjtlQKvuKTEdc3YfsF3b7ZxdbLu86AK5hQggPD4AFnmrUAn+uh8Q9zOMDHwy/sUZy9wJyCFkOMdAdM+2F8X9cdI76XKExjsUI5T8ygWKbhRIByUqjrvihlum4QyVPQNyT2GIKypiaJIiEybOAnHgpzcz8n0RyJuHFVflJy/7sRIajknE9Jmg0NALyyFafdTUT9sbisn4ym59ZPZFWWjTMKsT5etXZliCoKN1Zw3YJgPdTwWw1tqmmCfFJgYj9vtw3eoECl1395l4+7MTxGVB1o/StRe3wzWbXNaaDzROuz7a6eyWenaV5nCJvQTaX7Ee3fh0=
-  app: contactualize-api
-  on:
-    repo: reinhal/contactualize-api
+# language: node_js
+# node_js: node
+# services:
+# - mongodb
+# deploy:
+#   provider: heroku
+#   api_key:
+#     secure: AyEyTr93+zEbHrCtFQZYYZd9cuouLRRRDw9iSTCckXWlaqFFxKuQh9lHsJ9NXNs7XoBUldTpIxCOapWplkWsWlAesB9kwxRgNGImwBcUNLWhEKsTCCtavxqt19Df58Iaxed3tDTzLUT/kEEA5sHlIai5PlERa4ZKrgIOs4+slhmJeKhsva0GVREw9GBkwOXyBDVqIQackJslKDAi3N0vdoOfelon+4sP4xQAe6aMD/9Wkt/OuL1me45013EFGY59E9zDvn5rzoeTHA3Crxa5rhNCf+Sy0BW7xQ64Ggekjikuzz5cG8yWzb5zTYsVbk9h/72EBgjJW6nvcFXnc8ihEREb1PHxWakAPUrKZpnjjtlQKvuKTEdc3YfsF3b7ZxdbLu86AK5hQggPD4AFnmrUAn+uh8Q9zOMDHwy/sUZy9wJyCFkOMdAdM+2F8X9cdI76XKExjsUI5T8ygWKbhRIByUqjrvihlum4QyVPQNyT2GIKypiaJIiEybOAnHgpzcz8n0RyJuHFVflJy/7sRIajknE9Jmg0NALyyFafdTUT9sbisn4ym59ZPZFWWjTMKsT5etXZliCoKN1Zw3YJgPdTwWw1tqmmCfFJgYj9vtw3eoECl1395l4+7MTxGVB1o/StRe3wzWbXNaaDzROuz7a6eyWenaV5nCJvQTaX7Ee3fh0=
+#   app: contactualize-api
+#   on:
+#     repo: reinhal/contactualize-api
