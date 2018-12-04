@@ -1,6 +1,6 @@
 'use strict';
 require('dotenv').config();
-exports.CLIENT_ORIGIN = 'https://contactualize-client.herokuapp.com';
+exports.CLIENT_ORIGIN = process.env.CLIENT_ORIGIN ||'http://localhost:3000';
 exports.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://testUser:thinkful925@ds123361.mlab.com:23361/contactualize';
 exports.TEST_MONGODB_URI = process.env.TEST_MONGODB_URI || 'mongodb://localhost/contactualize-test';
 exports.PORT = process.env.PORT || 8080;
